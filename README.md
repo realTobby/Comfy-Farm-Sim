@@ -5,6 +5,6 @@ Listening to this sets the mood: https://www.youtube.com/watch?v=VSVbAS3K3jw&ab_
 
 Current Progress:
 
-![Banner](https://github.com/realTobby/Comfy-Farm-Sim/blob/main/Progress/wowATreeAmazing.PNG)
+![ProgressStatus](https://github.com/realTobby/Comfy-Farm-Sim/blob/main/Progress/progress1.gif)
 
 

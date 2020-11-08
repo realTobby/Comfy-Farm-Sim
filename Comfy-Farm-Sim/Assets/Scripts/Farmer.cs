@@ -19,33 +19,43 @@ public class Farmer : MonoBehaviour
     void Update()
     {
         CheckInputs();
-        
-
 
     }
 
     private void CheckInputs()
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit))
-        {
-            highlightedFarmpatch = hit.transform.gameObject;
-        }
-
-        if(Input.GetMouseButtonUp(0))
-        {
-            if(highlightedFarmpatch != null)
-            {
-                // open the farm menu
-                menurenderer.OpenFarmMenu(highlightedFarmpatch);
-            }
-        }
-
         if (highlightedFarmpatch != null)
         {
+            highlightedFarmpatch.GetComponent<FarmPatchBehaviour>().MouseLeave();
             highlightedFarmpatch = null;
         }
 
+        
+
+        if(menurenderer.menuIsOpen == false)
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                switch (hit.transform.tag)
+                {
+                    case "FARM_PATCH":
+                        highlightedFarmpatch = hit.transform.gameObject;
+                        highlightedFarmpatch.GetComponent<FarmPatchBehaviour>().MouseEnter();
+                        break;
+                }
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (highlightedFarmpatch != null && menurenderer.menuIsOpen == false)
+                {
+                    // open the farm menu
+                    menurenderer.OpenFarmMenu(highlightedFarmpatch);
+                }
+            }
+        }
+        
     }
 }

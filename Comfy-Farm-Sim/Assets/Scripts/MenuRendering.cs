@@ -7,13 +7,18 @@ public class MenuRendering : MonoBehaviour
     private GameObject selectedFarmPatch;
 
     public GameObject farmMenuPopup;
+    public GameObject inventoryMenuPopup;
 
-    private PrefabCollection prefabList;
+    public GameObject harvestButton;
+
+    
+
+    public bool menuIsOpen = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        prefabList = GameObject.FindGameObjectWithTag("PREFAB_LIST").GetComponent<PrefabCollection>();
+        
     }
 
     // Update is called once per frame
@@ -25,18 +30,53 @@ public class MenuRendering : MonoBehaviour
     public void OpenFarmMenu(GameObject clickedFarmPatch)
     {
         selectedFarmPatch = clickedFarmPatch;
-        farmMenuPopup.SetActive(true);
+        farmMenuPopup.gameObject.SetActive(true);
+        menuIsOpen = true;
+        harvestButton.gameObject.SetActive(false);
+        if (selectedFarmPatch.GetComponent<FarmPatchBehaviour>().isDoneGrowing == true)
+        {
+            harvestButton.gameObject.SetActive(true);
+        }
+
     }
 
     public void CloseFarmMenu()
     {
-        farmMenuPopup.SetActive(false);
+        farmMenuPopup.gameObject.SetActive(false);
+        menuIsOpen = false;
     }
 
     public void PlantTree()
     {
-        GameObject newPlant = Instantiate(prefabList.treePrefab, selectedFarmPatch.transform.position, Quaternion.identity);
+        if(selectedFarmPatch.GetComponent<FarmPatchBehaviour>().isEmpty == true)
+        {
+            selectedFarmPatch.GetComponent<FarmPatchBehaviour>().Plant(Plants.Tree);
+            selectedFarmPatch.GetComponent<FarmPatchBehaviour>().isEmpty = false;
+            selectedFarmPatch.GetComponent<FarmPatchBehaviour>().isDoneGrowing = true;
+            CloseFarmMenu();
+        }
+    }
+
+    public void OpenInventory()
+    {
+        inventoryMenuPopup.gameObject.SetActive(true);
+    }
+
+    public void CloseInventory()
+    {
+        inventoryMenuPopup.gameObject.SetActive(false);
+    }
+
+    public void HarvestFarm()
+    {
+        if(selectedFarmPatch != null)
+        {
+            selectedFarmPatch.GetComponent<FarmPatchBehaviour>().Harvest();
+           
+        }
+
         CloseFarmMenu();
     }
+
 
 }

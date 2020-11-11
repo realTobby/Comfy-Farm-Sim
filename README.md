@@ -7,4 +7,14 @@ Current Progress:
 
 ![ProgressStatus](https://github.com/realTobby/Comfy-Farm-Sim/blob/main/Progress/progress1.gif)
 
+Terms that describe this game:
+- Sandbox
+- Relaxing
+- Farming
+- Customization
+- Endless
+- Story
+- World Building
+- Low Poly
+
 

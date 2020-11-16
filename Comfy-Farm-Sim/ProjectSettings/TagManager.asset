@@ -7,6 +7,8 @@ TagManager:
   - MENU_RENDERER
   - PREFAB_LIST
   - FARM_PATCH
+  - WORLD
+  - CONSTRUCTION_PATCH
   layers:
   - Default
   - TransparentFX

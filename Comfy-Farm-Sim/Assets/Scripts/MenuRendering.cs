@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Interfaces;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,12 +9,16 @@ public class MenuRendering : MonoBehaviour
 
     public GameObject farmMenuPopup;
     public GameObject inventoryMenuPopup;
+    public GameObject inventoryOpenButton;
 
     public GameObject harvestButton;
 
-    
+    IMenues currentMenu;
 
     public bool menuIsOpen = false;
+
+    public bool isEditModeEnabled = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +38,7 @@ public class MenuRendering : MonoBehaviour
         farmMenuPopup.gameObject.SetActive(true);
         menuIsOpen = true;
         harvestButton.gameObject.SetActive(false);
-        if (selectedFarmPatch.GetComponent<FarmPatchBehaviour>().isDoneGrowing == true)
+        if (selectedFarmPatch.GetComponent<FarmPatch>().isDoneGrowing == true)
         {
             harvestButton.gameObject.SetActive(true);
         }
@@ -48,11 +53,11 @@ public class MenuRendering : MonoBehaviour
 
     public void PlantTree()
     {
-        if(selectedFarmPatch.GetComponent<FarmPatchBehaviour>().isEmpty == true)
+        if(selectedFarmPatch.GetComponent<FarmPatch>().isEmpty == true)
         {
-            selectedFarmPatch.GetComponent<FarmPatchBehaviour>().Plant(Plants.Tree);
-            selectedFarmPatch.GetComponent<FarmPatchBehaviour>().isEmpty = false;
-            selectedFarmPatch.GetComponent<FarmPatchBehaviour>().isDoneGrowing = true;
+            selectedFarmPatch.GetComponent<FarmPatch>().Plant(Plantables.Tree);
+            selectedFarmPatch.GetComponent<FarmPatch>().isEmpty = false;
+            selectedFarmPatch.GetComponent<FarmPatch>().isDoneGrowing = true;
             CloseFarmMenu();
         }
     }
@@ -60,23 +65,46 @@ public class MenuRendering : MonoBehaviour
     public void OpenInventory()
     {
         inventoryMenuPopup.gameObject.SetActive(true);
+        inventoryOpenButton.gameObject.SetActive(false);
     }
 
     public void CloseInventory()
     {
         inventoryMenuPopup.gameObject.SetActive(false);
+        inventoryOpenButton.gameObject.SetActive(true);
     }
 
     public void HarvestFarm()
     {
         if(selectedFarmPatch != null)
         {
-            selectedFarmPatch.GetComponent<FarmPatchBehaviour>().Harvest();
-           
+            selectedFarmPatch.GetComponent<FarmPatch>().Harvest();
         }
-
         CloseFarmMenu();
     }
 
+    public void ConstructionMenuButtonClick()
+    {
+        if(isEditModeEnabled)
+        {
+            DisableEditMode();
+        }
+        else
+        {
+            EnableEditMode();
+        }
+    }
+
+    public void EnableEditMode()
+    {
+        isEditModeEnabled = true;
+        GameObject.FindGameObjectWithTag("WORLD").GetComponent<World>().EnableEditMode();
+    }
+
+    public void DisableEditMode()
+    {
+        isEditModeEnabled = false;
+        GameObject.FindGameObjectWithTag("WORLD").GetComponent<World>().DisableEditMode();
+    }
 
 }

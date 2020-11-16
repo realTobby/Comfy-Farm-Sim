@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,9 @@ public class Farmer : MonoBehaviour
 {
     MenuRendering menurenderer;
 
-    GameObject highlightedFarmpatch;
+    GameObject selectedFarmPatch;
+
+    GameObject selectedConstructionPatch;
 
 
     // Start is called before the first frame update
@@ -24,15 +27,20 @@ public class Farmer : MonoBehaviour
 
     private void CheckInputs()
     {
-        if (highlightedFarmpatch != null)
+        if (selectedFarmPatch != null)
         {
-            highlightedFarmpatch.GetComponent<FarmPatchBehaviour>().MouseLeave();
-            highlightedFarmpatch = null;
+            selectedFarmPatch.GetComponent<FarmPatch>().MouseLeave();
+            selectedFarmPatch = null;
         }
 
-        
+        if(selectedConstructionPatch != null)
+        {
+            selectedConstructionPatch.GetComponent<ConstructionPatch>().MouseLeave();
+            selectedConstructionPatch = null;
+        }
 
-        if(menurenderer.menuIsOpen == false)
+        // Normal Farming Actions
+        if (menurenderer.menuIsOpen == false)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -41,21 +49,60 @@ public class Farmer : MonoBehaviour
                 switch (hit.transform.tag)
                 {
                     case "FARM_PATCH":
-                        highlightedFarmpatch = hit.transform.gameObject;
-                        highlightedFarmpatch.GetComponent<FarmPatchBehaviour>().MouseEnter();
+                        selectedFarmPatch = hit.transform.gameObject;
+                        selectedFarmPatch.GetComponent<FarmPatch>().MouseEnter();
                         break;
                 }
             }
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (highlightedFarmpatch != null && menurenderer.menuIsOpen == false)
+                if (selectedFarmPatch != null && menurenderer.menuIsOpen == false)
                 {
                     // open the farm menu
-                    menurenderer.OpenFarmMenu(highlightedFarmpatch);
+                    menurenderer.OpenFarmMenu(selectedFarmPatch);
                 }
             }
         }
-        
+
+        // Construction Actions
+        if (menurenderer.menuIsOpen == false && menurenderer.isEditModeEnabled == true)
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                switch (hit.transform.tag)
+                {
+                    case "CONSTRUCTION_PATCH":
+                        selectedConstructionPatch = hit.transform.gameObject;
+                        selectedConstructionPatch.GetComponent<ConstructionPatch>().MouseEnter();
+                        break;
+                }
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (selectedConstructionPatch != null && menurenderer.menuIsOpen == false)
+                {
+                    int posX = Convert.ToInt32(selectedConstructionPatch.transform.position.x);
+                    int posY = Convert.ToInt32(selectedConstructionPatch.transform.position.z);
+
+
+                    // create nomrla farm patch here
+                    GameObject.FindGameObjectWithTag("WORLD").GetComponent<World>().CreateNewFarmPatchAt(posX, posY);
+                    //Debug.Log("create new farm patch");
+
+                    menurenderer.DisableEditMode();
+
+                }
+            }
+        }
+
+
+
+
+
+
     }
 }
